@@ -4,7 +4,7 @@
 import sys
 import json
 from httpagentparser import detect
-import ipdata
+from ipdata import *
 
 def error(error_info):
 	print 'Error:', error_info
@@ -14,14 +14,15 @@ ip_db = {}
 
 
 def main():
-	# print 'httpagentparser version', httpagentparser.__version__
-	# print len(sys.argv)
-	# raw_input()
-	if len(sys.argv) != 2:
+	if len(sys.argv) < 2:
 		error('No input file.')
 		return -1
 	
 	file_name = sys.argv[1]
+	work(file_name)
+
+
+def work(file_name):
 	data_file = open(file_name, 'r')
 	if not data_file:
 		error('File not opened.')
@@ -35,15 +36,15 @@ def main():
 			hit += 1
 			client_ip = ip_to_int(req['ClientIP'])
 			result = detect(req['UserAgent'])
-			ip_db['client_ip'].update(result)
+			ip_db[client_ip] = ipdata(client_ip)
+			ip_db[client_ip].update(result)
+			ip_db[client_ip].update_data_size(req["BodyLen"])
+			ip_db[client_ip].update_service(req["ServiceName"])
 			
 		else:
 			empty += 1
 	print empty, hit
 
-
-def test(file_name):
-	file_name
 
 def ip_to_int(ip_addr):
     array = ip_addr.split('.')
@@ -54,6 +55,7 @@ def ip_to_int(ip_addr):
     ans = reduce(lambda x, y: int(x)*256 + int(y), array)
     return ans
 
+
 def int_to_ip(ip_int):
 	array = ['0', '0', '0', '0']
 	ipv4_i = 3
@@ -62,6 +64,7 @@ def int_to_ip(ip_int):
 		ip_int /= 256
 		ipv4_i -= 1
 	return '.'.join(array)
+
 
 if __name__ == '__main__':
 	main()
