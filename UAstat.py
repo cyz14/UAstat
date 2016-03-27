@@ -3,13 +3,15 @@
 
 import sys
 import json
-import httpagentparser
+from httpagentparser import detect
 import ipdata
 
 def error(error_info):
 	print 'Error:', error_info
 	return
 	
+ip_db = {}
+
 
 def main():
 	# print 'httpagentparser version', httpagentparser.__version__
@@ -30,13 +32,11 @@ def main():
 	for line in data_file:
 		req = json.loads(line)
 		if req["UserAgent"]:
-			# print req["UserAgent"]
 			hit += 1
 			client_ip = ip_to_int(req['ClientIP'])
-			# print req['ClientIP'], client_ip
-			if int_to_ip(ip_to_int(req['ClientIP'])) != req['ClientIP']:
-				print 'Error: function wrong'
-				break
+			result = detect(req['UserAgent'])
+			ip_db['client_ip'].update(result)
+			
 		else:
 			empty += 1
 	print empty, hit
