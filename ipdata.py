@@ -1,37 +1,19 @@
+
 class ipdata():
-<<<<<<< HEAD
 	"""store the info of os, browser, service 
 	type and data size distribution belonging 
 	to a specific ip address"""
 	
 	def __init__(self, ip_addr):
 	#	super(ipdata, self).__init__()
-=======
 	"""store the info of os, browser, service type and data size 
 	distribution belonging to a specific ip address"""
 	def __init__(self, ip_addr):
->>>>>>> 587f11ad258ffc2389f06a71db537c4b10fc7dde
 		self.ip_addr = ip_addr
 		self.os = {}
 		self.browser = {}
 		self.data_size = {}
 		self.service = {}
-<<<<<<< HEAD
-		
-	
-	def update_os(os):
-		pass
-
-	def update_browser(browser):
-		pass
-
-	def update_data_size(size):
-		pass
-
-	def update_service(service):
-		pass
-=======
-	
 	
 	def update(self, result):
 		update_os(self, result['os'])
@@ -55,4 +37,3 @@ class ipdata():
 		if not self.service[service];
 			self.service[service] = 0
 		self.service[service] += 1
->>>>>>> 587f11ad258ffc2389f06a71db537c4b10fc7dde
