@@ -1,2 +1,4 @@
 # ignore all json data files
 *.json
+*.log
+*.pyc

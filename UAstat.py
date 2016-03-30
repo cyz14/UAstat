@@ -14,6 +14,11 @@ ip_db = {}
 
 
 def main():
+	'''
+	 Bots, such as Web crawlers, often also include a URL 
+	 and/or e-mail address so that the Webmaster can contact 
+	 the operator of the bot.
+	'''
 	if len(sys.argv) < 2:
 		error('No input file.')
 		return -1
@@ -27,7 +32,9 @@ def work(file_name):
 	if not data_file:
 		error('File not opened.')
 		return -1
-		
+	
+	log = open('req.log', 'w')
+
 	empty = 0
 	hit   = 0
 	for line in data_file:
@@ -37,33 +44,27 @@ def work(file_name):
 			client_ip = ip_to_int(req['ClientIP'])
 			result = detect(req['UserAgent'])
 			ip_db[client_ip] = ipdata(client_ip)
-			ip_db[client_ip].update(result)
+			if not ip_db[client_ip].update(result):
+				log.write(req['UserAgent'] + '\n' + str(result) + '\n\n')
+
 			ip_db[client_ip].update_data_size(req["BodyLen"])
 			ip_db[client_ip].update_service(req["ServiceName"])
 			
 		else:
 			empty += 1
 	print empty, hit
+	write_stat(ip_db)
+	log.close()
+	data_file.close()
 
 
-def ip_to_int(ip_addr):
-    array = ip_addr.split('.')
-    if len(array) != 4:
-        error('ip_addr not valid.')
-        return 0
-    
-    ans = reduce(lambda x, y: int(x)*256 + int(y), array)
-    return ans
+def write_stat(db, file_name='stat.json'):
+	stat_file = open(file_name, 'w')
+	for ip_entry in db:
+		stat_file.write(str(db[ip_entry])+'\n')
 
+	stat_file.close()
 
-def int_to_ip(ip_int):
-	array = ['0', '0', '0', '0']
-	ipv4_i = 3
-	while ip_int:
-		array[ipv4_i] = str(ip_int % 256)
-		ip_int /= 256
-		ipv4_i -= 1
-	return '.'.join(array)
 
 
 if __name__ == '__main__':
