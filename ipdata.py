@@ -1,3 +1,6 @@
+#!/usr/bin python
+# -*- coding: utf-8 -*-
+
 import json
 
 def ip_to_int(ip_addr):

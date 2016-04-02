@@ -14,11 +14,6 @@ ip_db = {}
 
 
 def main():
-	'''
-	 Bots, such as Web crawlers, often also include a URL 
-	 and/or e-mail address so that the Webmaster can contact 
-	 the operator of the bot.
-	'''
 	if len(sys.argv) < 2:
 		error('No input file.')
 		return -1
