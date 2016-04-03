@@ -9,7 +9,7 @@ from ipdata import *
 def error(error_info):
 	print 'Error:', error_info
 	return
-	
+
 ip_db = {}
 
 
