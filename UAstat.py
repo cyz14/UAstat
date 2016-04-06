@@ -20,9 +20,24 @@ def main():
 	
 	file_name = sys.argv[1]
 	work(file_name)
+	
+	
+def deal_session_file(file_name='session.json'):
+	data_file = open(file_name, 'r')
+	if not data_file:
+		error('File not opened.')
+		return -1
+
+	for line in data_file:
+		req = json.loads(line)
+		req_id = ip_to_int(req['ClientIP'])
+		rtt = req['Rtt']
+		if req_id not in ip_db:
+			ip_db[req_id] = new ipdata()
 
 
-def work(file_name):
+
+def deal_request_file(file_name='request.json'):
 	data_file = open(file_name, 'r')
 	if not data_file:
 		error('File not opened.')
@@ -51,6 +66,12 @@ def work(file_name):
 	write_stat(ip_db)
 	log.close()
 	data_file.close()
+	return
+
+
+def work(file_name):
+	deal_session_file()
+	deal_request_file()
 
 
 def write_stat(db, file_name='stat.json'):
@@ -59,7 +80,6 @@ def write_stat(db, file_name='stat.json'):
 		stat_file.write(str(db[ip_entry])+'\n')
 
 	stat_file.close()
-
 
 
 if __name__ == '__main__':
