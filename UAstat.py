@@ -1,12 +1,14 @@
 #!/usr/bin python
 # -*- coding: utf-8 -*-
 
-import sys, getopt
+import sys
 import json
 from httpagentparser import detect
 from MergeSesReq import *
 from ipdata import *
 import numpy as np
+# todo
+# import and getopt
 
 
 ip_db = {}
@@ -68,17 +70,12 @@ def deal_merged_file(file_name='session.request.json'):
 			process_request(req)
 
 		Ses = Log['SesLog']
-		# print Ses['LatencyInfo'], type(Ses['LatencyInfo'])
-		# if raw_input().lower().startswith('q'):
-		# 	return
 		process_session(Ses)
 
 	fin.close()
 
 
 def work(file_name):
-	# deal_session_file()
-	# deal_request_file()
 	deal_merged_file(file_name)
 	
 
@@ -92,38 +89,3 @@ def write_stat(db, file_name='stat.json'):
 
 if __name__ == '__main__':
 	main()
-
-
-def deal_request_file(file_name='request.json'):
-	data_file = open(file_name, 'r')
-	if not data_file:
-		error('File not opened.')
-		return -1
-
-	empty = 0
-	hit   = 0
-	for line in data_file:
-		req = json.loads(line)
-		if req["UserAgent"]:
-			hit += 1
-			process_request(req)
-		else:
-			empty += 1
-	print empty, hit
-	
-	data_file.close()
-	return
-
-
-def deal_session_file(file_name='session.json'):
-	data_file = open(file_name, 'r')
-	if not data_file:
-		error('File not opened.')
-		return -1
-
-	for line in data_file:
-		ses = json.loads(line)
-		ses_id = ip_to_int(ses['ClientIP'])
-		rtt = ses['Rtt']
-		if ses_id not in ip_db:
-			ip_db[ses_id] = ipdata(client_ip)
