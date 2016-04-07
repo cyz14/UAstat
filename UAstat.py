@@ -4,9 +4,12 @@
 import sys
 import json
 from httpagentparser import detect
+
+# merge session file and request file when needed
 from MergeSesReq import *
+# per ip entry's complete data
 from ipdata import *
-import numpy as np
+
 # todo
 # import and getopt
 
