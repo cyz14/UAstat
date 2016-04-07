@@ -1,7 +1,7 @@
 #!/usr/bin python
 # -*- coding: utf-8 -*-
 
-import sys
+import sys, getopt
 import json
 from httpagentparser import detect
 from ipdata import *
@@ -68,6 +68,8 @@ def deal_request_file(file_name='request.json'):
 	data_file.close()
 	return
 
+def merge(fses, freq):
+	pass
 
 def work(file_name):
 	deal_session_file()
