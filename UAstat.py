@@ -4,6 +4,7 @@
 import sys, getopt
 import json
 from httpagentparser import detect
+from MergeSesReq import *
 from ipdata import *
 
 def error(error_info):
@@ -14,6 +15,7 @@ ip_db = {}
 
 
 def main():
+
 	if len(sys.argv) < 2:
 		error('No input file.')
 		return -1
@@ -35,8 +37,6 @@ def deal_session_file(file_name='session.json'):
 		if req_id not in ip_db:
 			ip_db[req_id] = new ipdata()
 
-
-
 def deal_request_file(file_name='request.json'):
 	data_file = open(file_name, 'r')
 	if not data_file:
@@ -51,15 +51,7 @@ def deal_request_file(file_name='request.json'):
 		req = json.loads(line)
 		if req["UserAgent"]:
 			hit += 1
-			client_ip = ip_to_int(req['ClientIP'])
-			result = detect(req['UserAgent'])
-			ip_db[client_ip] = ipdata(client_ip)
-			if not ip_db[client_ip].update(result):
-				log.write(req['UserAgent'] + '\n' + str(result) + '\n\n')
-
-			ip_db[client_ip].update_data_size(req["BodyLen"])
-			ip_db[client_ip].update_service(req["ServiceName"])
-			
+			process_request(req)
 		else:
 			empty += 1
 	print empty, hit
@@ -68,12 +60,41 @@ def deal_request_file(file_name='request.json'):
 	data_file.close()
 	return
 
-def merge(fses, freq):
-	pass
+def process_request(req):
+	client_ip = ip_to_int(req['ClientIP'])
+	result = detect(req['UserAgent'])
+	ip_db[client_ip] = ipdata(client_ip)
+	if not ip_db[client_ip].update(result):
+		log.write(req['UserAgent'] + '\n' + str(result) + '\n\n')
+
+	ip_db[client_ip].update_data_size(req["BodyLen"])
+	ip_db[client_ip].update_service(req["ServiceName"])
+
+
+def process_session(ses):
+	
+
+
+def deal_merged_file(file_name='session.request.json'):
+	fin = open(file_name, 'r')
+	if not fin:
+		error('Error: Merged file not opened.')
+		return
+
+	for index, line in enumerate(fin):
+		Log = json.loads(line)
+		Req = Log['ReqLog']
+		process_request(Req)
+
+		Ses = Log['SesLog']
+		process_session(Ses)
+
 
 def work(file_name):
-	deal_session_file()
-	deal_request_file()
+	#MergeSesReq()
+	# deal_session_file()
+	# deal_request_file()
+	
 
 
 def write_stat(db, file_name='stat.json'):

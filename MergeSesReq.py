@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import json, time, os, sys
@@ -6,7 +7,7 @@ EMPTYJSON = '{}'
 d_log = {}	# dict to save new logs
 
 def getFileNamesFromDir(dir):
-	 # get session file name and request file name from current work directory 
+	# get session file name and request file name from current work directory 
     id = 0
     file_list = []
     for file_name in os.listdir(dir):
@@ -25,7 +26,7 @@ def getFileNamesFromDir(dir):
 
 def main():
 	ses_file, req_file = getFileNamesFromDir(os.getcwd())
-	merge(ses_file, req_file)
+	MergeSesReq(ses_file, req_file)
 
 
 def fileLineNumber(file_name):
@@ -36,7 +37,7 @@ def fileLineNumber(file_name):
     return count + 1
 
 
-def merge(f_ses_name, f_req_name):
+def MergeSesReq(f_ses_name, f_req_name):
 	print time.clock(), 'Program starts.'
 	# ses_line_num = fileLineNumber(f_ses_name)
 	# req_line_num = fileLineNumber(f_req_name)
@@ -48,7 +49,8 @@ def merge(f_ses_name, f_req_name):
 	f_req = open(f_req_name, 'r+')
 
 	# result file
-	f_ans = open(f_ses_name[:-4]+f_req_name[:-4]+'json', 'w')
+	f_ans_name = f_ses_name[:-4]+f_req_name[:-4]+'json'
+	f_ans = open(f_ans_name, 'w')
 	
 	print 'Reading sessions file...'
 	for cnt_ses, line in enumerate(f_ses):
@@ -85,6 +87,9 @@ def merge(f_ses_name, f_req_name):
 	print '\nUsed %.6fs to read requests file.\n' % time.clock()
 
 	d_log.clear()
+	f_ans.close()
+	# print f_ans.__str__()
+	return f_ans_name
 
 if __name__ == '__main__':
 	main()
