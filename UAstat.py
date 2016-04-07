@@ -9,7 +9,7 @@ from ipdata import *
 def error(error_info):
 	print 'Error:', error_info
 	return
-	
+
 ip_db = {}
 
 
@@ -86,3 +86,6 @@ def write_stat(db, file_name='stat.json'):
 
 if __name__ == '__main__':
 	main()
+
+
+
