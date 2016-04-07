@@ -68,8 +68,8 @@ class ipdata():
 			'os':self.os,
 			'browser':self.browser,
 			'service':self.service,
-			'retransrate':1.0*self.retransrate/len(self.rtt_list),	# average
-			'timeout':1.0*self.timeout/len(self.rtt_list)			# average
+			'retransrate':1.0 * self.retransrate / self.session_number(),	# average
+			'timeout':1.0 * self.timeout / self.session_number(),	# average
 			}
 		if self.session_number() >= self.MIN_SAMPLE_RATE:
 			ans['rtt'] 		= cdf_quantiles(self.rtt_list)
